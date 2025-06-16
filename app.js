@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://kanbanboard-client.vercel.app"],
     credentials: true,
   })
 );
@@ -34,22 +34,6 @@ app.use("/task", taskRouter);
 app.get("/", (req, res) => {
   res.send("Server is Running");
 });
-
-const logger = async (req, res, next) => {
-  console.log("logger is running");
-  next();
-};
-
-const verifyToken = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).send({ message: "Unauthorized" });
-
-  jwt.verify(token, process.env.SECURE_TOKEN, (err, decoded) => {
-    if (err) return res.status(403).send({ message: "Forbidden" });
-    req.user = decoded;
-    next();
-  });
-};
 
 app.post("/jwt", async (req, res) => {
   const user = req.body;
