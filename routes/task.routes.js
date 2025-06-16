@@ -111,4 +111,34 @@ taskRouter.get("/singleTask/:id", async (req, res) => {
   }
 });
 
+taskRouter.patch("/singleTaskUpdate/:id", async (req, res) => {
+  try {
+    await connectDB();
+    const data = req.body;
+    const id = req.params.id;
+
+    const query = { _id: new ObjectId(id) };
+    const update = {
+      $set: {
+        title: data.title,
+        description: data.description,
+        dueDate: data.dueDate,
+      },
+    };
+    const result = await TaskModel.updateOne(query, update);
+    res.send({
+      message: "Task updated successfully",
+      success: true,
+      status: 200,
+      data: result,
+    });
+  } catch (error) {
+    res.send({
+      message: "There was a server error",
+      success: false,
+      status: 500,
+    });
+  }
+});
+
 export default taskRouter;
