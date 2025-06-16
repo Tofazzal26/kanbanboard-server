@@ -1,6 +1,7 @@
 import express from "express";
 import connectDB from "../db/connectDB.js";
 import TaskModel from "../models/TaskModel/TaskModel.js";
+import { ObjectId } from "mongodb";
 
 const taskRouter = express.Router();
 
@@ -31,6 +32,32 @@ taskRouter.get("/allTask", async (req, res) => {
     res.send({
       data: result,
       message: "All Task",
+      success: true,
+      status: 201,
+    });
+  } catch (error) {
+    res.send({
+      message: "There was a server error",
+      success: false,
+      status: 500,
+    });
+  }
+});
+
+taskRouter.patch("/taskStatus/:id", async (req, res) => {
+  try {
+    await connectDB();
+    const id = req.params.id;
+    const { status } = req.body;
+    const query = { _id: new ObjectId(id) };
+    const updatedTask = await TaskModel.findByIdAndUpdate(
+      query,
+      { status },
+      { new: true }
+    );
+    res.send({
+      data: updatedTask,
+      message: "Task status updated",
       success: true,
       status: 201,
     });
