@@ -15,7 +15,7 @@ taskRouter.post("/taskAdd", async (req, res) => {
       data: result,
       message: "Task Created Successfully",
       success: true,
-      status: 201,
+      status: 200,
     });
   } catch (error) {
     res.send({
@@ -33,7 +33,7 @@ taskRouter.get("/allTask", async (req, res) => {
       data: result,
       message: "All Task",
       success: true,
-      status: 201,
+      status: 200,
     });
   } catch (error) {
     res.send({
@@ -59,7 +59,27 @@ taskRouter.patch("/taskStatus/:id", async (req, res) => {
       data: updatedTask,
       message: "Task status updated",
       success: true,
-      status: 201,
+      status: 200,
+    });
+  } catch (error) {
+    res.send({
+      message: "There was a server error",
+      success: false,
+      status: 500,
+    });
+  }
+});
+
+taskRouter.delete("/taskDelete/:id", async (req, res) => {
+  try {
+    await connectDB();
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await TaskModel.findByIdAndDelete(query);
+    res.send({
+      message: "Task Delete Success",
+      success: true,
+      status: 200,
     });
   } catch (error) {
     res.send({
