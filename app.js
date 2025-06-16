@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
 import connectDB from "./db/connectDB.js";
+import taskRouter from "./routes/task.routes.js";
 dotenv.config();
 
 const app = express();
@@ -28,6 +29,7 @@ const cookieOptions = {
 
 connectDB();
 app.use("/login", authRouter);
+app.use("/task", taskRouter);
 
 app.get("/", (req, res) => {
   res.send("🚀 Server is Running");
