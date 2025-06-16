@@ -90,4 +90,25 @@ taskRouter.delete("/taskDelete/:id", async (req, res) => {
   }
 });
 
+taskRouter.get("/singleTask/:id", async (req, res) => {
+  try {
+    await connectDB();
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const result = await TaskModel.findOne(query);
+    res.send({
+      data: result,
+      message: "Single Task",
+      success: true,
+      status: 200,
+    });
+  } catch (error) {
+    res.send({
+      message: "There was a server error",
+      success: false,
+      status: 500,
+    });
+  }
+});
+
 export default taskRouter;
