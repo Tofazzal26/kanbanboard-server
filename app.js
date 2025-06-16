@@ -32,7 +32,7 @@ app.use("/login", authRouter);
 app.use("/task", taskRouter);
 
 app.get("/", (req, res) => {
-  res.send("🚀 Server is Running");
+  res.send("Server is Running");
 });
 
 const logger = async (req, res, next) => {
@@ -94,5 +94,5 @@ app.get("/userInfo", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Server running at ${port}`);
 });

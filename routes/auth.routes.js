@@ -17,7 +17,7 @@ authRouter.post("/validation", async (req, res) => {
       );
       if (isPasswordMatched) {
         return res.send({
-          message: "User Register Successfully",
+          message: "User Login Successfully",
           success: false,
           status: 200,
         });
