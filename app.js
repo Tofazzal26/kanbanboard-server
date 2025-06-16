@@ -1,0 +1,96 @@
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import jwt from "jsonwebtoken";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import authRouter from "./routes/auth.routes.js";
+import connectDB from "./db/connectDB.js";
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 4000;
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
+
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+};
+
+connectDB();
+app.use("/login", authRouter);
+
+app.get("/", (req, res) => {
+  res.send("🚀 Server is Running");
+});
+
+const logger = async (req, res, next) => {
+  console.log("logger is running");
+  next();
+};
+
+const verifyToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).send({ message: "Unauthorized" });
+
+  jwt.verify(token, process.env.SECURE_TOKEN, (err, decoded) => {
+    if (err) return res.status(403).send({ message: "Forbidden" });
+    req.user = decoded;
+    next();
+  });
+};
+
+app.post("/jwt", async (req, res) => {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.SECURE_TOKEN, {
+    expiresIn: "365d",
+  });
+  res.cookie("token", token, cookieOptions).send({ success: true });
+});
+
+app.post("/logout", async (req, res) => {
+  const user = req.body;
+  res
+    .clearCookie("token", { ...cookieOptions, maxAge: 0 })
+    .send({ success: true });
+});
+
+app.get("/check-auth", async (req, res) => {
+  const token = req.cookies?.token;
+  if (!token) {
+    return res.status(401).send({ isAuthenticated: false });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.SECURE_TOKEN);
+    res.send({ isAuthenticated: true, user: decoded });
+  } catch (err) {
+    res.status(403).send({ isAuthenticated: false });
+  }
+});
+
+app.get("/userInfo", async (req, res) => {
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(401).send({ message: "Unauthorized: No token found" });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.SECURE_TOKEN);
+    res.send({ user: decoded });
+  } catch (err) {
+    res.status(401).send({ message: "Unauthorized: Invalid token" });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
