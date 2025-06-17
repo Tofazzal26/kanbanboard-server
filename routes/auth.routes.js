@@ -4,7 +4,7 @@ import UserModel from "./../models/UserModel/UserModel.js";
 import bcrypt from "bcrypt";
 
 const authRouter = express.Router();
-
+// usr validation data post mongoose
 authRouter.post("/validation", async (req, res) => {
   try {
     await connectDB();
@@ -40,7 +40,7 @@ authRouter.post("/validation", async (req, res) => {
       status: 201,
     });
   } catch (error) {
-    console.error("Registration Error", error.message);
+    // console.error("Registration Error", error.message);
     res.send({
       message: "There was a server error",
       success: false,

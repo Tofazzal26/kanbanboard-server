@@ -4,7 +4,7 @@ import TaskModel from "../models/TaskModel/TaskModel.js";
 import { ObjectId } from "mongodb";
 
 const taskRouter = express.Router();
-
+// task add oparation
 taskRouter.post("/taskAdd", async (req, res) => {
   try {
     await connectDB();
@@ -25,7 +25,7 @@ taskRouter.post("/taskAdd", async (req, res) => {
     });
   }
 });
-
+// task get oparation
 taskRouter.get("/allTask", async (req, res) => {
   try {
     const result = await TaskModel.find();
@@ -43,7 +43,7 @@ taskRouter.get("/allTask", async (req, res) => {
     });
   }
 });
-
+// single task update
 taskRouter.patch("/taskStatus/:id", async (req, res) => {
   try {
     await connectDB();
@@ -69,7 +69,7 @@ taskRouter.patch("/taskStatus/:id", async (req, res) => {
     });
   }
 });
-
+// single task delete
 taskRouter.delete("/taskDelete/:id", async (req, res) => {
   try {
     await connectDB();
@@ -89,7 +89,7 @@ taskRouter.delete("/taskDelete/:id", async (req, res) => {
     });
   }
 });
-
+// single task get oparation
 taskRouter.get("/singleTask/:id", async (req, res) => {
   try {
     await connectDB();
@@ -110,7 +110,7 @@ taskRouter.get("/singleTask/:id", async (req, res) => {
     });
   }
 });
-
+// single task update
 taskRouter.patch("/singleTaskUpdate/:id", async (req, res) => {
   try {
     await connectDB();

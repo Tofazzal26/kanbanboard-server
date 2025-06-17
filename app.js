@@ -28,13 +28,15 @@ const cookieOptions = {
 };
 
 connectDB();
+// user routes
 app.use("/login", authRouter);
+// task route
 app.use("/task", taskRouter);
 
 app.get("/", (req, res) => {
   res.send("Server is Running");
 });
-
+// jwt authentication oparation
 app.post("/jwt", async (req, res) => {
   const user = req.body;
   const token = jwt.sign(user, process.env.SECURE_TOKEN, {
@@ -42,14 +44,14 @@ app.post("/jwt", async (req, res) => {
   });
   res.cookie("token", token, cookieOptions).send({ success: true });
 });
-
+// user logout oparation
 app.post("/logout", async (req, res) => {
   const user = req.body;
   res
     .clearCookie("token", { ...cookieOptions, maxAge: 0 })
     .send({ success: true });
 });
-
+// user check auth
 app.get("/check-auth", async (req, res) => {
   const token = req.cookies?.token;
   if (!token) {
@@ -62,7 +64,7 @@ app.get("/check-auth", async (req, res) => {
     res.status(403).send({ isAuthenticated: false });
   }
 });
-
+// user inforamtion get
 app.get("/userInfo", async (req, res) => {
   const { token } = req.cookies;
 
