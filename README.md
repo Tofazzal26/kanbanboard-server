@@ -31,7 +31,7 @@ Install dependencies
 Start the server
 
 ```bash
-  npm run dev 
+  nodemon app.js 
 ```
 #### You need to add the following to your .env file: 
 DB_USER --> DB_PASS --> SECURE_TOKEN
