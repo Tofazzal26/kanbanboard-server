@@ -123,6 +123,7 @@ taskRouter.patch("/singleTaskUpdate/:id", async (req, res) => {
         title: data.title,
         description: data.description,
         dueDate: data.dueDate,
+        priority: data.priority,
       },
     };
     const result = await TaskModel.updateOne(query, update);
